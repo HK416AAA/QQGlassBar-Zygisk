@@ -12,7 +12,9 @@ jobs:
       - uses: actions/setup-java@v4
         with: { distribution: temurin, java-version: '21' }
       - name: deps
-        run: sudo apt-get update && sudo apt-get install -y ninja-build cmake
+        run: |
+          sudo apt-get update && sudo apt-get install -y ninja-build cmake
+          yes | sdkmanager "ndk;29.0.13599879" >/dev/null 2>&1 || true
 
       # Payload: build on SDK37 so the kyant0 backdrop (liquid glass) variant is
       # available. Uncomment backdrop dep in payload/build.gradle.kts.
@@ -24,7 +26,7 @@ jobs:
       - name: build native + container
         env: { ANDROID_HOME: "$ANDROID_HOME", ANDROID_SDK_ROOT: "$ANDROID_SDK_ROOT" }
         run: |
-          NDK_DIR=$(ls -d "$ANDROID_HOME"/ndk/* | sort -V | tail -1)
+          NDK_DIR="$ANDROID_HOME"/ndk/29.0.13599879
           NDK="$NDK_DIR" bash native/build.sh
           NDK="$NDK_DIR" bash zygisk/build.sh
 
