@@ -37,9 +37,10 @@ jobs:
 
       - name: assemble
         run: |
-          GLASS_APK="$(find payload/build/outputs/apk/debug -maxdepth 1 -name '*.apk' | head -1)" \
+          GLASS_APK="$(find payload/build/outputs/apk/debug -maxdepth 1 -name '*.apk' | head -1)"
           echo "using $GLASS_APK"
-          GB_VERSION=v0.1.0 GB_VERCODE=1 bash scripts/assemble-module.sh
+          export GLASS_APK GB_VERSION=v0.1.0 GB_VERCODE=1
+          bash scripts/assemble-module.sh
 
       - uses: actions/upload-artifact@v4
         with: { name: qqglassbar-module, path: out/qqglassbar-zygisk-*.zip }
