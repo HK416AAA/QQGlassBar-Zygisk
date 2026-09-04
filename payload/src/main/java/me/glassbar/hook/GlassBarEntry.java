@@ -74,7 +74,7 @@ public final class GlassBarEntry {
                     .getMethod("currentActivityThread").invoke(null);
             Object app = at == null ? null
                     : at.getClass().getMethod("getApplication").invoke(at);
-            return app != null && QQ_PKG.equals(app.getPackageName());
+            return app != null && QQ_PKG.equals(((android.content.Context) app).getPackageName());
         } catch (Throwable t) {
             return false;
         }
