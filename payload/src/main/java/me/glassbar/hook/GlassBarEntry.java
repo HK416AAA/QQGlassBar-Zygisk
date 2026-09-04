@@ -40,12 +40,30 @@ public final class GlassBarEntry {
 
     public static void startWithCore(String modulePath, String hostDataDir, ClassLoader coreLoader) {
         try {
+            waitHostAppReady();
             ensureEngineReady();
             scheduleAttach();
             writeStatus(hostDataDir, "ok\nengine:core\n" + android.os.Process.myPid());
         } catch (Throwable t) {
             Log.e(TAG, "start failed", t);
             writeStatus(hostDataDir, "fail: " + t + "\n" + Log.getStackTraceString(t));
+        }
+    }
+
+    private static void waitHostAppReady() throws Exception {
+        long deadline = System.currentTimeMillis() + 30000;
+        for (;;) {
+            try {
+                Object at = Class.forName("android.app.ActivityThread")
+                        .getMethod("currentActivityThread").invoke(null);
+                if (at != null && at.getClass().getMethod("getApplication").invoke(at) != null) {
+                    Thread.sleep(2500); // let QQ Application.onCreate finish
+                    return;
+                }
+            } catch (Throwable ignored) {
+            }
+            if (System.currentTimeMillis() >= deadline) return;
+            Thread.sleep(500);
         }
     }
 
