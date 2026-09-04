@@ -1,0 +1,12 @@
+.gradle
+.kotlin
+build/
+out/
+zygisk/.build-*/
+zygisk/out/
+native/.build-*/
+native/out/
+core/.classes/
+*.log
+payload/build/
+payload/.gradle/

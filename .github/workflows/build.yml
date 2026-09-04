@@ -1,0 +1,37 @@
+name: Build QQGlassBar-Zygisk
+
+on:
+  workflow_dispatch:
+  push: { branches: [main] }
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with: { distribution: temurin, java-version: '21' }
+      - name: deps
+        run: sudo apt-get update && sudo apt-get install -y ninja-build cmake
+
+      # Payload: build on SDK37 so the kyant0 backdrop (liquid glass) variant is
+      # available. Uncomment backdrop dep in payload/build.gradle.kts.
+      - name: build payload (SDK 37)
+        run: |
+          cd payload
+          ./gradlew :assembleDebug --no-daemon
+
+      - name: build native + container
+        env: { ANDROID_HOME: "$ANDROID_HOME", ANDROID_SDK_ROOT: "$ANDROID_SDK_ROOT" }
+        run: |
+          NDK_DIR=$(ls -d "$ANDROID_HOME"/ndk/* | sort -V | tail -1)
+          NDK="$NDK_DIR" bash native/build.sh
+          NDK="$NDK_DIR" bash zygisk/build.sh
+
+      - name: assemble
+        run: |
+          GLASS_APK=payload/build/outputs/apk/debug/payload-debug.apk \
+          GB_VERSION=v0.1.0 GB_VERCODE=1 bash scripts/assemble-module.sh
+
+      - uses: actions/upload-artifact@v4
+        with: { name: qqglassbar-module, path: out/qqglassbar-zygisk-*.zip }

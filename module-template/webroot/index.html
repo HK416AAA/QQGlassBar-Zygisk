@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>QFun+QAux 合并容器</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<main class="card">
+  <h1>QFun + QAuxiliary</h1>
+  <p class="subtitle">合并容器 · 模块启用与注入目标（Phase1 probe）</p>
+  <p id="conn" class="banner hidden"></p>
+
+  <section class="row"><div><div class="t">总开关</div><div class="d">关闭则不注入</div></div>
+    <label class="switch"><input type="checkbox" id="enabled"><span class="slider"></span></label></section>
+  <section class="row"><div><div class="t">QAuxiliary</div><div class="d">注入 QAux 载荷</div></div>
+    <label class="switch"><input type="checkbox" id="mod_qauxv"><span class="slider"></span></label></section>
+  <section class="row"><div><div class="t">QFun</div><div class="d">注入 QFun 载荷</div></div>
+    <label class="switch"><input type="checkbox" id="mod_qfun"><span class="slider"></span></label></section>
+
+  <section>
+    <div class="t">注入目标</div>
+    <ul id="targets"></ul>
+  </section>
+
+  <section class="actions"><button id="save" class="primary">保存</button><span id="status"></span></section>
+
+  <section><div class="t">注入诊断</div><pre id="diag">读取中…</pre></section>
+</main>
+<script src="app.js"></script>
+</body>
+</html>

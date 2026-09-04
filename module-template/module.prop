@@ -1,0 +1,6 @@
+id=glassbar_zygisk
+name=QQGlassBar-Zygisk
+version=v0.1.0
+versionCode=1
+author=community
+description=QQ floating liquid-glass bottom bar (Zygisk, shared LSPlant engine). Android 12+.
