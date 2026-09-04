@@ -40,12 +40,26 @@ public final class GlassBarEntry {
 
     public static void startWithCore(String modulePath, String hostDataDir, ClassLoader coreLoader) {
         try {
-            CoreEngineImpl.ensureInit();
+            ensureEngineReady();
             scheduleAttach();
             writeStatus(hostDataDir, "ok\nengine:core\n" + android.os.Process.myPid());
         } catch (Throwable t) {
             Log.e(TAG, "start failed", t);
             writeStatus(hostDataDir, "fail: " + t + "\n" + Log.getStackTraceString(t));
+        }
+    }
+
+    /** Retry engine init until the host process is ready (libart visible). */
+    private static void ensureEngineReady() throws Exception {
+        long deadline = System.currentTimeMillis() + 30000;
+        for (;;) {
+            try {
+                CoreEngineImpl.ensureInit();
+                return;
+            } catch (Throwable t) {
+                if (System.currentTimeMillis() >= deadline) throw t;
+                Thread.sleep(1500);
+            }
         }
     }
 
