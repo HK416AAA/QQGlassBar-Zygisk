@@ -6,9 +6,9 @@ HERE="$(cd "$(dirname "$0")" && pwd)"
 SRC="$HERE/src"
 CLS="$HERE/.classes"
 OUT="$HERE/out"
-SDK="${ANDROID_HOME:-/opt/android-sdk}"
-ANDROID_JAR="$SDK/platforms/android-36/android.jar"
-D8="$SDK/build-tools/36.0.0/d8"
+SDK="${ANDROID_HOME:-/usr/local/lib/android/sdk}"
+ANDROID_JAR=$(ls "$SDK"/platforms/android-*/android.jar 2>/dev/null | sort -V | tail -1)
+D8=$(ls "$SDK"/build-tools/*/d8 2>/dev/null | sort -V | tail -1)
 
 rm -rf "$CLS"
 mkdir -p "$CLS" "$OUT"

@@ -23,6 +23,10 @@ jobs:
           cd payload
           ./gradlew :assembleDebug --no-daemon
 
+      - name: build shared core engine dex
+        run: |
+          bash core/build_core.sh
+
       - name: build native + container
         run: |
           echo "ANDROID_HOME=$ANDROID_HOME"
