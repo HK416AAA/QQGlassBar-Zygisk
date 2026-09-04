@@ -24,9 +24,10 @@ jobs:
           ./gradlew :assembleDebug --no-daemon
 
       - name: build native + container
-        env: { ANDROID_HOME: "$ANDROID_HOME", ANDROID_SDK_ROOT: "$ANDROID_SDK_ROOT" }
         run: |
+          echo "ANDROID_HOME=$ANDROID_HOME"
           NDK_DIR="$ANDROID_HOME"/ndk/29.0.13599879
+          test -d "$NDK_DIR" || { echo "missing $NDK_DIR"; ls "$ANDROID_HOME"/ndk 2>/dev/null; exit 1; }
           NDK="$NDK_DIR" bash native/build.sh
           NDK="$NDK_DIR" bash zygisk/build.sh
 
