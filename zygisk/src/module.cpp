@@ -151,7 +151,8 @@ private:
     void loadAndStart(JNIEnv *e, const std::string &apk) {
         // core loader (librarySearchPath = qfun_zygisk/libs so loadLibrary works)
         std::string libsDir = appData + "/files/qfun_zygisk/libs";
-        jobject core = makeLoader(e, appData + "/files/qfunqaux/core.dex", libsDir.c_str(), nullptr);
+        std::string coreDex = appData + "/files/qfunqaux/core.dex";
+        jobject core = makeLoader(e, coreDex.c_str(), libsDir.c_str(), nullptr);
         jobject pay = makeLoader(e, apk.c_str(), libsDir.c_str(), core);
         if (!pay) { if (e->ExceptionCheck()) e->ExceptionClear(); return; }
         jclass clCL = e->FindClass("java/lang/ClassLoader");
