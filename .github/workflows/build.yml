@@ -14,7 +14,7 @@ jobs:
       - name: deps
         run: |
           sudo apt-get update && sudo apt-get install -y ninja-build cmake
-          yes | sdkmanager "ndk;29.0.13599879" >/dev/null 2>&1 || true
+          SDKM=$ANDROID_HOME/cmdline-tools/latest/bin/sdkmanager; yes | "$SDKM" "ndk;29.0.13599879" >/dev/null 2>&1 || true
 
       # Payload: build on SDK37 so the kyant0 backdrop (liquid glass) variant is
       # available. Uncomment backdrop dep in payload/build.gradle.kts.
