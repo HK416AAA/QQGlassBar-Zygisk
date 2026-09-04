@@ -42,7 +42,9 @@ public final class GlassBarEntry {
         try {
             waitHostAppReady();
             ensureEngineReady();
-            scheduleAttach();
+            if (enabled()) {
+                scheduleAttach();
+            }
             writeStatus(hostDataDir, "ok\nengine:core\n" + android.os.Process.myPid());
         } catch (Throwable t) {
             Log.e(TAG, "start failed", t);
@@ -78,6 +80,14 @@ public final class GlassBarEntry {
                 if (System.currentTimeMillis() >= deadline) throw t;
                 Thread.sleep(1500);
             }
+        }
+    }
+
+    private static boolean enabled() {
+        try {
+            return new File("/data/adb/glassbar/enable").isFile();
+        } catch (Throwable t) {
+            return false;
         }
     }
 
@@ -166,12 +176,7 @@ public final class GlassBarEntry {
         float d = act.getResources().getDisplayMetrics().density;
         FrameLayout bar = new FrameLayout(act);
         bar.setBackgroundColor(0xD91A1F2A);
-        if (Build.VERSION.SDK_INT >= 31) {
-            try {
-                bar.setRenderEffect(RenderEffect.createBlurEffect(d * 10, d * 10, Shader.TileMode.CLAMP));
-            } catch (Throwable ignored) {
-            }
-        }
+        // blur intentionally disabled until attach target is stable on-device
         LinearLayout row = new LinearLayout(act);
         row.setOrientation(LinearLayout.HORIZONTAL);
         row.setGravity(Gravity.CENTER);
